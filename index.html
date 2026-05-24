@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SprintBurndown</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-icon">◈</span>
+    <span class="logo-text">SprintBurndown</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="nav-item active" data-view="dashboard">
+      <span class="nav-icon">▦</span> Dashboard
+    </button>
+    <button class="nav-item" data-view="board">
+      <span class="nav-icon">▤</span> Task Board
+    </button>
+    <button class="nav-item" data-view="analytics">
+      <span class="nav-icon">◎</span> Analytics
+    </button>
+    <button class="nav-item" data-view="compare">
+      <span class="nav-icon">⇄</span> Сравнение
+    </button>
+  </nav>
+
+  <div class="sidebar-sprints">
+    <div class="sprints-header">
+      <span>Спринты</span>
+      <button id="btn-create-sprint" class="btn-icon" title="Новый спринт">+</button>
+    </div>
+    <div id="sprint-list"></div>
+  </div>
+
+  <div class="sidebar-footer">
+    <button id="btn-load-demo" class="btn-file btn-demo">▶ Загрузить демо</button>
+    <button id="btn-export" class="btn-file">↑ Экспорт JSON</button>
+    <button id="btn-import-trigger" class="btn-file">↓ Импорт JSON</button>
+    <input type="file" id="btn-import" accept=".json" style="display:none" />
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <div class="topbar-left">
+      <h1 id="page-title">Dashboard</h1>
+      <span id="sprint-badge"></span>
+    </div>
+    <div class="topbar-right">
+      <input type="text" id="search-input" placeholder="Поиск задач..." />
+      <button id="btn-theme" class="btn-theme" title="Сменить тему">☀</button>
+      <button id="btn-add-task" class="btn-primary">+ Задача</button>
+    </div>
+  </header>
+
+  <!-- VIEWS -->
+  <div id="view-dashboard" class="view active">
+    <!-- Metric Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card" id="metric-total">
+        <div class="metric-label">Всего SP</div>
+        <div class="metric-value" id="val-total">0</div>
+        <div class="metric-sub">story points</div>
+      </div>
+      <div class="metric-card accent" id="metric-remaining">
+        <div class="metric-label">Остаток SP</div>
+        <div class="metric-value" id="val-remaining">0</div>
+        <div class="metric-sub">не завершено</div>
+      </div>
+      <div class="metric-card" id="metric-done">
+        <div class="metric-label">Готово</div>
+        <div class="metric-value" id="val-done">0%</div>
+        <div class="metric-sub">completion rate</div>
+      </div>
+      <div class="metric-card" id="metric-velocity">
+        <div class="metric-label">Velocity</div>
+        <div class="metric-value" id="val-velocity">0</div>
+        <div class="metric-sub">SP / день</div>
+      </div>
+      <div class="metric-card" id="metric-health">
+        <div class="metric-label">Sprint Health</div>
+        <div class="metric-value" id="val-health">—</div>
+        <div class="metric-sub" id="val-health-sub">нет данных</div>
+      </div>
+      <div class="metric-card" id="metric-forecast">
+        <div class="metric-label">Прогноз</div>
+        <div class="metric-value" id="val-forecast">—</div>
+        <div class="metric-sub">завершение</div>
+      </div>
+    </div>
+
+    <!-- Burndown Chart -->
+    <div class="chart-container">
+      <div class="chart-header">
+        <span class="chart-title">Burndown Chart</span>
+        <button id="btn-snapshot" class="btn-secondary">📸 Снапшот</button>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="burndown-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-board" class="view">
+    <div class="board-columns">
+      <div class="board-col" id="col-todo">
+        <div class="col-header">
+          <span class="col-title">📋 To Do</span>
+          <span class="col-count" id="count-todo">0</span>
+        </div>
+        <div class="task-list sortable" id="tasks-todo" data-status="todo"></div>
+      </div>
+      <div class="board-col" id="col-inprogress">
+        <div class="col-header">
+          <span class="col-title">⚡ In Progress</span>
+          <span class="col-count" id="count-inprogress">0</span>
+        </div>
+        <div class="task-list sortable" id="tasks-inprogress" data-status="inprogress"></div>
+      </div>
+      <div class="board-col" id="col-done">
+        <div class="col-header">
+          <span class="col-title">✓ Done</span>
+          <span class="col-count" id="count-done">0</span>
+        </div>
+        <div class="task-list sortable" id="tasks-done" data-status="done"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-analytics" class="view">
+    <div class="analytics-grid">
+      <div class="analytics-card">
+        <h3>Распределение задач</h3>
+        <canvas id="pie-chart" height="200"></canvas>
+      </div>
+      <div class="analytics-card">
+        <h3>Метрики спринта</h3>
+        <div id="analytics-details"></div>
+      </div>
+      <div class="analytics-card wide">
+        <h3>История спринтов</h3>
+        <div id="sprint-history"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-compare" class="view">
+    <div class="compare-controls">
+      <div class="compare-select-wrap">
+        <label>Спринт A</label>
+        <select id="compare-sprint-a"></select>
+      </div>
+      <div class="compare-vs">⇄</div>
+      <div class="compare-select-wrap">
+        <label>Спринт B</label>
+        <select id="compare-sprint-b"></select>
+      </div>
+      <button class="btn-primary" id="btn-run-compare">Сравнить</button>
+    </div>
+
+    <div id="compare-result" class="compare-result hidden">
+      <!-- Метрики -->
+      <div class="compare-metrics-grid" id="compare-metrics"></div>
+
+      <!-- Burndown обоих спринтов -->
+      <div class="compare-chart-wrap">
+        <div class="chart-header">
+          <span class="chart-title">Burndown Chart — сравнение</span>
+        </div>
+        <div style="padding:20px; height:320px;">
+          <canvas id="compare-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Таблица задач -->
+      <div class="compare-tables-grid">
+        <div class="analytics-card">
+          <h3 id="compare-table-a-title">Спринт A — задачи</h3>
+          <div id="compare-table-a"></div>
+        </div>
+        <div class="analytics-card">
+          <h3 id="compare-table-b-title">Спринт B — задачи</h3>
+          <div id="compare-table-b"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="compare-empty" class="empty-state" style="margin-top:80px;">
+      <div class="empty-state-icon">⇄</div>
+      <div>Выберите два спринта и нажмите «Сравнить»</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL SPRINT -->
+<div id="modal-sprint" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="modal-sprint-title">Новый спринт</span>
+      <button class="modal-close" data-modal="modal-sprint">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="sprint-edit-id" />
+      <div class="form-group">
+        <label>Название спринта</label>
+        <input type="text" id="sprint-name" placeholder="Sprint 1" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Дата начала</label>
+          <input type="date" id="sprint-start" />
+        </div>
+        <div class="form-group">
+          <label>Дата окончания</label>
+          <input type="date" id="sprint-end" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost modal-close" data-modal="modal-sprint">Отмена</button>
+      <button class="btn-primary" id="btn-save-sprint">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TASK -->
+<div id="modal-task" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="modal-task-title">Новая задача</span>
+      <button class="modal-close" data-modal="modal-task">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="task-edit-id" />
+      <div class="form-group">
+        <label>Название задачи</label>
+        <input type="text" id="task-title" placeholder="Описание задачи..." />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Story Points</label>
+          <input type="number" id="task-points" min="1" max="100" value="1" />
+        </div>
+        <div class="form-group">
+          <label>Статус</label>
+          <select id="task-status">
+            <option value="todo">To Do</option>
+            <option value="inprogress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost modal-close" data-modal="modal-task">Отмена</button>
+      <button class="btn-primary" id="btn-save-task">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
