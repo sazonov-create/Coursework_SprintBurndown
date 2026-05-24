@@ -1,0 +1,69 @@
+{
+  "activeSprintId": "sprint_demo_2",
+  "sprints": [
+    {
+      "id": "sprint_demo_1",
+      "name": "Sprint 1 — Авторизация",
+      "startDate": "2025-04-01",
+      "endDate": "2025-04-14",
+      "tasks": [
+        { "id": "t101", "title": "Дизайн экрана входа", "points": 3, "status": "done", "createdAt": "2025-04-01T09:00:00.000Z" },
+        { "id": "t102", "title": "Вёрстка формы регистрации", "points": 5, "status": "done", "createdAt": "2025-04-01T09:10:00.000Z" },
+        { "id": "t103", "title": "JWT-аутентификация на бэкенде", "points": 8, "status": "done", "createdAt": "2025-04-02T10:00:00.000Z" },
+        { "id": "t104", "title": "Восстановление пароля через email", "points": 5, "status": "done", "createdAt": "2025-04-03T11:00:00.000Z" },
+        { "id": "t105", "title": "Валидация форм на фронтенде", "points": 3, "status": "done", "createdAt": "2025-04-04T09:00:00.000Z" },
+        { "id": "t106", "title": "Написать unit-тесты для авторизации", "points": 5, "status": "done", "createdAt": "2025-04-05T12:00:00.000Z" },
+        { "id": "t107", "title": "Документация API авторизации", "points": 2, "status": "done", "createdAt": "2025-04-06T14:00:00.000Z" }
+      ],
+      "snapshots": [
+        { "date": "2025-04-01T18:00:00.000Z", "remainingPoints": 31 },
+        { "date": "2025-04-03T18:00:00.000Z", "remainingPoints": 23 },
+        { "date": "2025-04-07T18:00:00.000Z", "remainingPoints": 15 },
+        { "date": "2025-04-10T18:00:00.000Z", "remainingPoints": 7 },
+        { "date": "2025-04-14T18:00:00.000Z", "remainingPoints": 0 }
+      ]
+    },
+    {
+      "id": "sprint_demo_2",
+      "name": "Sprint 2 — Дашборд",
+      "startDate": "2025-04-15",
+      "endDate": "2025-04-28",
+      "tasks": [
+        { "id": "t201", "title": "Макет главного дашборда", "points": 5, "status": "done", "createdAt": "2025-04-15T09:00:00.000Z" },
+        { "id": "t202", "title": "Компонент метрик (карточки)", "points": 3, "status": "done", "createdAt": "2025-04-15T09:30:00.000Z" },
+        { "id": "t203", "title": "Интеграция Chart.js — Burndown", "points": 8, "status": "done", "createdAt": "2025-04-16T10:00:00.000Z" },
+        { "id": "t204", "title": "Sidebar навигация", "points": 3, "status": "done", "createdAt": "2025-04-16T11:00:00.000Z" },
+        { "id": "t205", "title": "Адаптивная вёрстка дашборда", "points": 5, "status": "inprogress", "createdAt": "2025-04-17T09:00:00.000Z" },
+        { "id": "t206", "title": "Тёмная / светлая тема", "points": 5, "status": "inprogress", "createdAt": "2025-04-18T10:00:00.000Z" },
+        { "id": "t207", "title": "Экспорт данных в PDF", "points": 8, "status": "todo", "createdAt": "2025-04-19T09:00:00.000Z" },
+        { "id": "t208", "title": "Уведомления в реальном времени", "points": 5, "status": "todo", "createdAt": "2025-04-19T10:00:00.000Z" }
+      ],
+      "snapshots": [
+        { "date": "2025-04-15T18:00:00.000Z", "remainingPoints": 42 },
+        { "date": "2025-04-18T18:00:00.000Z", "remainingPoints": 31 },
+        { "date": "2025-04-22T18:00:00.000Z", "remainingPoints": 23 },
+        { "date": "2025-04-25T18:00:00.000Z", "remainingPoints": 18 }
+      ]
+    },
+    {
+      "id": "sprint_demo_3",
+      "name": "Sprint 3 — Task Manager",
+      "startDate": "2025-04-29",
+      "endDate": "2025-05-12",
+      "tasks": [
+        { "id": "t301", "title": "Kanban-доска (3 колонки)", "points": 8, "status": "done", "createdAt": "2025-04-29T09:00:00.000Z" },
+        { "id": "t302", "title": "Drag-and-drop задач (SortableJS)", "points": 5, "status": "done", "createdAt": "2025-04-29T10:00:00.000Z" },
+        { "id": "t303", "title": "Создание / редактирование задачи", "points": 5, "status": "inprogress", "createdAt": "2025-04-30T09:00:00.000Z" },
+        { "id": "t304", "title": "Поиск и фильтрация задач", "points": 3, "status": "inprogress", "createdAt": "2025-04-30T10:00:00.000Z" },
+        { "id": "t305", "title": "Приоритеты задач (High/Med/Low)", "points": 3, "status": "todo", "createdAt": "2025-05-01T09:00:00.000Z" },
+        { "id": "t306", "title": "Назначение задачи участнику", "points": 5, "status": "todo", "createdAt": "2025-05-01T10:00:00.000Z" },
+        { "id": "t307", "title": "История изменений задачи", "points": 8, "status": "todo", "createdAt": "2025-05-02T09:00:00.000Z" }
+      ],
+      "snapshots": [
+        { "date": "2025-04-29T18:00:00.000Z", "remainingPoints": 37 },
+        { "date": "2025-05-02T18:00:00.000Z", "remainingPoints": 29 },
+        { "date": "2025-05-06T18:00:00.000Z", "remainingPoints": 24 }
+      ]
+    }
+  ]
+}
